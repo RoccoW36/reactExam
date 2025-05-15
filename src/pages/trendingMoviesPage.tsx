@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PageTemplate from '../components/templateMovieListPage';
 import { BaseMovieProps, TrendingMovies } from "../types/interfaces";
 import { getTrendingMovies } from "../api/tmdb-api";
@@ -21,10 +21,17 @@ const genreFiltering = {
 };
 
 const TrendingMoviesPage: React.FC = () => {
-  const { data, error, isLoading, isError } = useQuery<TrendingMovies, Error>("trending", getTrendingMovies);
-  const { filterValues, setFilterValues, filterFunction } = useFiltering(
-    [titleFiltering, genreFiltering]
+  const [timeWindow, setTimeWindow] = useState<"day" | "week">("day");
+
+  const { data, error, isLoading, isError } = useQuery<TrendingMovies, Error>(
+    ["trending", timeWindow],
+    () => getTrendingMovies(timeWindow)
   );
+
+  const { filterValues, setFilterValues, filterFunction } = useFiltering([
+    titleFiltering,
+    genreFiltering,
+  ]);
 
   if (isLoading) {
     return <Spinner />;
@@ -52,7 +59,7 @@ const TrendingMoviesPage: React.FC = () => {
         title="Trending Movies"
         movies={displayedMovies}
         action={(movie: BaseMovieProps) => {
-          return <MustWatchIcon {...movie} />
+          return <MustWatchIcon {...movie} />;
         }}
       />
       <MovieFilterUI
@@ -60,6 +67,9 @@ const TrendingMoviesPage: React.FC = () => {
         titleFilter={filterValues[0].value}
         genreFilter={filterValues[1].value}
       />
+      <button onClick={() => setTimeWindow(timeWindow === "day" ? "week" : "day")}>
+        Toggle to {timeWindow === "day" ? "Weekly Trends" : "Daily Trends"}
+      </button>
     </>
   );
 };
