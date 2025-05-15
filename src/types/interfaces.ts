@@ -15,6 +15,7 @@ export interface BaseMovieProps {
   revenue: number;
   vote_count: number;
   favourite?: boolean;
+  mustwatch?: boolean;
   genre_ids?: number[];
 }
 
@@ -88,4 +89,11 @@ export interface Review {
   agree: boolean,
   rating: number,
   movieId: number,
+}
+
+export interface TrendingMovies {
+  page: number;
+  total_pages: number;
+  total_results: number;
+  results: BaseMovieProps[];
 }

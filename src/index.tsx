@@ -1,22 +1,24 @@
 import React from "react";
-import ReactDOM from 'react-dom/client'
+import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Route, Navigate, Routes } from "react-router-dom";
 import HomePage from "./pages/homePage";
 import MoviePage from "./pages/movieDetailsPage";
-import FavouriteMoviesPage from "./pages/favouriteMoviesPage"; // NEW
+import FavouriteMoviesPage from "./pages/favouriteMoviesPage";
+import TrendingMoviesPage from "./pages/trendingMoviesPage"; 
+import MustWatchPage from "./pages/mustwatchMoviesPage";
 import MovieReviewPage from "./pages/movieReviewPage";
 import SiteHeader from './components/siteHeader';
 import { QueryClientProvider, QueryClient } from "react-query";
 import { ReactQueryDevtools } from 'react-query/devtools';
 import MoviesContextProvider from "./contexts/moviesContext";
-import AddMovieReviewPage from './pages/addMovieReviewPage'
+import AddMovieReviewPage from './pages/addMovieReviewPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 360000,
       refetchInterval: 360000,
-      refetchOnWindowFocus: false
+      refetchOnWindowFocus: false,
     },
   },
 });
@@ -31,6 +33,8 @@ const App = () => {
             <Route path="/reviews/:id" element={<MovieReviewPage />} />
             <Route path="/reviews/form" element={<AddMovieReviewPage />} />
             <Route path="/movies/favourites" element={<FavouriteMoviesPage />} />
+            <Route path="/movies/trending" element={<TrendingMoviesPage />} />
+            <Route path="/movies/mustwatch" element={<MustWatchPage />} />
             <Route path="/movies/:id" element={<MoviePage />} />
             <Route path="/" element={<HomePage />} />
             <Route path="*" element={<Navigate to="/" />} />
@@ -46,4 +50,4 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
-)
+);

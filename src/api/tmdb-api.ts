@@ -11,13 +11,31 @@ export const getMovies = () => {
     });
 };
 
-  export const getUpcomingMovies = () => {
-    return fetch(
-      `https://api.themoviedb.org/3/movie/upcoming?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&include_adult=false&page=1`
-    )
-      .then(res => res.json());
-    
-  };
+export const getTrendingMovies = async (timeWindow = "week") => {
+  if (typeof timeWindow !== "string") {
+    console.warn("Invalid timeWindow type, defaulting to 'day'");
+    timeWindow = "day";
+  }
+  const apiKey = import.meta.env.VITE_TMDB_KEY;
+  const url = `https://api.themoviedb.org/3/trending/movie/${timeWindow}?api_key=${apiKey}&language=en-US&page=1`;
+
+  try {
+    const res = await fetch(url);
+
+    if (!res.ok) throw new Error(`HTTP error! Status: ${res.status} - ${res.statusText}`);
+
+    const data = await res.json();
+
+    if (!data.results) throw new Error("No results found in API response.");
+
+    console.log("Fetched trending movies:", data);
+    return data.results;
+  } catch (error) {
+    console.error("Error fetching trending movies:", error);
+    return [];
+  }
+};
+
   
   export const getMovie =  ( id : string) => {
     return fetch(
